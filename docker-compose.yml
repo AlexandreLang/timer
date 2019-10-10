@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+  db:
+    build:
+      context: ./db
+    ports:
+      - "3001:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: test
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+
+  wordpress:
+    depends_on:
+      - db
+    build:
+      context: ./site
+    volumes:
+      - ./site:/var/www/html
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+
+volumes:
+  db_data:
